@@ -1,0 +1,296 @@
+{
+  "info": {
+    "_postman_id": "adaaa538-8a3c-4595-8e2a-3cd70de4a569",
+    "name": "Job Tracker API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "48316624"
+  },
+  "item": [
+    {
+      "name": "Register",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"email\": \"test1@gmail.com\",\r\n  \"password\": \"12345678\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/auth/register",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "auth",
+            "register"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Login",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"email\": \"test1@gmail.com\",\r\n  \"password\": \"12345678\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/auth/login",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "auth",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Create Job",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{access_token}}",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"company\": \"Microsoft\",\r\n  \"role\": \"SDE Intern\",\r\n  \"notes\": \"Referral\",\r\n  \"job_url\": \"https://careers.microsoft.com\",\r\n  \"applied_date\": \"2026-04-18\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/jobs",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "jobs"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Jobs",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{access_token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/jobs",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "jobs"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Single Job",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{access_token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/jobs/{{job_id}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "jobs",
+            "{{job_id}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Update Job",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{access_token}}",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"status\": \"interview\",\r\n  \"notes\": \"HR call done\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/jobs/{{job_id}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "jobs",
+            "{{job_id}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Job History",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{access_token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/jobs/{{job_id}}/history",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "jobs",
+            "{{job_id}}",
+            "history"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Dashboard",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{access_token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/dashboard",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "dashboard"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Stale Jobs",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{access_token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/dashboard/stale",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "dashboard",
+            "stale"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Delete Job",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{access_token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/jobs/{{job_id}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "jobs",
+            "{{job_id}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Verify Deleted Job",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{access_token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/jobs/{{job_id}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "jobs",
+            "{{job_id}}"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

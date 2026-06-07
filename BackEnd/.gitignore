@@ -1,0 +1,27 @@
+# 🐍 Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# 📦 Virtual Environment
+venv/
+.env/
+
+# 🗄️ Database
+*.db
+*.sqlite3
+
+# 🔐 Environment variables
+.env
+
+# 🧪 Flask / Migrations
+migrations/versions/__pycache__/
+*.log
+
+# 🛠️ VS Code
+.vscode/
+
+# 🧾 System files
+.DS_Store
+Thumbs.db
