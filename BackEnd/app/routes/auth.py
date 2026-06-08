@@ -9,6 +9,7 @@ auth_bp = Blueprint('auth', __name__)
 
 @auth_bp.route('/register', methods=['POST'])
 @limiter.limit("10 per minute")
+
 def register():
     data = request.get_json()
 
@@ -70,6 +71,7 @@ def logout():
     jti=get_jwt()["jti"]
     jwt_blocklist.add(jti)
     return jsonify({"message":"Logged out successfully"})
+
 
 @auth_bp.route('/refresh',methods=['POST'])
 @jwt_required(refresh=True)
