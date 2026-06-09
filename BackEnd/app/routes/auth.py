@@ -8,7 +8,7 @@ from app.schemas.user_schema import UserSchema
 auth_bp = Blueprint('auth', __name__)
 
 @auth_bp.route('/register', methods=['POST'])
-@limiter.limit("10 per minute")
+@limiter.limit("30 per minute")
 
 def register():
     data = request.get_json()

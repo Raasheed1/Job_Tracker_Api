@@ -26,9 +26,7 @@ def test_create_job(client):
             "role": "SDE"
         }
     )
-
     assert response.status_code == 201
-
 
 def test_get_jobs(client):
     token = get_token(client)
