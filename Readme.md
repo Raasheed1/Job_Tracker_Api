@@ -1,6 +1,6 @@
 # 🚀 Job Tracker API
 
-[![Run Tests](https://github.com/Ibrahim-2005/job-tracker-api/actions/workflows/test.yml/badge.svg)](https://github.com/Ibrahim-2005/job-tracker-api/actions/workflows/test.yml)
+[![Run Tests](https://github.com/Ibrahim-2005/job-tracker-api/actions/workflows/test.yml/badge.svg)]
 ![Python](https://img.shields.io/badge/Python-3.12-blue)
 ![Flask](https://img.shields.io/badge/Flask-API-black)
 
@@ -296,15 +296,6 @@ JWT_SECRET_KEY=your_jwt_secret
 * JWT blocklist is stored in-memory and resets when the server restarts  
 * SimpleCache is not suitable for multi-instance production  
 * Scheduler runs inside the app (can be separated in production)  
-
----
-
-## 👨‍💻 Author
-
-**Ibrahim**
-
-* GitHub: https://github.com/Ibrahim-2005
-* LinkedIn: https://www.linkedin.com/in/mohamed-ibrahim-y/
 
 ---
 
