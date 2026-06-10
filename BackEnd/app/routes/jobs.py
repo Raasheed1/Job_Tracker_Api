@@ -151,7 +151,11 @@ def update_job(job_id):
             "id": job.id,
             "company": job.company,
             "role": job.role,
-            "status": job.status
+            "status": job.status,
+            "notes": job.notes,
+            "job_url": job.job_url,
+            "applied_date": job.applied_date,
+            "created_at": job.created_at.isoformat() if job.created_at else None
         }
     })
 

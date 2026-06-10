@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from flask_caching import Cache
+from flask_cors import CORS
 
 load_dotenv()
 
@@ -30,6 +31,10 @@ def create_app():
     app.config.from_object("config.Config")
     if not app.config.get("SQLALCHEMY_DATABASE_URI"):
         app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///:memory:"
+
+    # Allow requests from the frontend (file://, localhost, etc.)
+    CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
+
     db.init_app(app)
     migrate.init_app(app, db)
     jwt.init_app(app)
