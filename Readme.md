@@ -1,8 +1,10 @@
 # 🚀 Job Tracker API
 
-[![Run Tests](https://github.com/Ibrahim-2005/job-tracker-api/actions/workflows/test.yml/badge.svg)]
 ![Python](https://img.shields.io/badge/Python-3.12-blue)
 ![Flask](https://img.shields.io/badge/Flask-API-black)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Database-blue)
+![SQLAlchemy](https://img.shields.io/badge/SQLAlchemy-ORM-red)
+![JWT](https://img.shields.io/badge/JWT-Authentication-green)
 
 A production-ready backend API to track job applications with authentication, status tracking, analytics, caching, and automated testing.
 
@@ -10,7 +12,7 @@ A production-ready backend API to track job applications with authentication, st
 
 ## 🌐 Live API
 
-👉 https://job-tracker-api-gjs9.onrender.com/
+👉 yet to add
 
 ---
 
@@ -209,7 +211,7 @@ A complete Postman collection is included covering:
 
 ---
 
-## 🧱 Full Project Structure
+## 🧱 Backend Structure
 
 ```
 Job_Tracker/
@@ -254,6 +256,7 @@ Job_Tracker/
 * Backend hosted on **Render**
 * PostgreSQL database hosted on **Railway**
 * Environment variables used for secure configuration
+* Frontend hosted on **Yet to add**
 
 ---
 
@@ -296,11 +299,5 @@ JWT_SECRET_KEY=your_jwt_secret
 * JWT blocklist is stored in-memory and resets when the server restarts  
 * SimpleCache is not suitable for multi-instance production  
 * Scheduler runs inside the app (can be separated in production)  
-
----
-
-## ⭐ Support
-
-If you found this useful, consider giving this repo a ⭐
 
 ---
