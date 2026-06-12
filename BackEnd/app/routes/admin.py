@@ -11,7 +11,7 @@ from datetime import datetime, timezone
 admin_bp = Blueprint('admin', __name__)
 
 
-# ─── Job Management ─────────────────────────────────────────────────────────
+# 1─── Job Management ─────────────────────────────────────────────────────────
 
 @admin_bp.route('/jobs', methods=['POST'])
 @admin_required
@@ -58,6 +58,7 @@ def create_job():
     }), 201
 
 
+#2
 @admin_bp.route('/jobs/<int:job_id>', methods=['PUT'])
 @admin_required
 def update_job(job_id):
@@ -99,7 +100,7 @@ def update_job(job_id):
         }
     })
 
-
+#3
 @admin_bp.route('/jobs/<int:job_id>', methods=['DELETE'])
 @admin_required
 def delete_job(job_id):
@@ -114,7 +115,7 @@ def delete_job(job_id):
 
     return jsonify({"message": "Job deleted"})
 
-
+#4
 @admin_bp.route('/jobs', methods=['GET'])
 @admin_required
 def list_jobs():
@@ -146,7 +147,7 @@ def list_jobs():
         }
     })
 
-
+#5
 @admin_bp.route('/jobs/<int:job_id>/applicants', methods=['GET'])
 @admin_required
 def get_job_applicants(job_id):
@@ -176,7 +177,7 @@ def get_job_applicants(job_id):
         }
     })
 
-
+#6
 # ─── Application Management ─────────────────────────────────────────────────
 
 @admin_bp.route('/applications', methods=['GET'])
@@ -215,7 +216,7 @@ def list_applications():
         }
     })
 
-
+#7
 @admin_bp.route('/applications/<int:application_id>', methods=['PATCH'])
 @admin_required
 def update_application_status(application_id):

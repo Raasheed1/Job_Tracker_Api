@@ -18,7 +18,7 @@ A production-ready backend API to track job applications with authentication, st
 
 ## 🧠 Overview
 
-The **Job Tracker API** is a backend system designed to help users manage and track their job applications efficiently.
+The **Job Tracker API** is a backend with simple frountend system designed to help users manage and track their job applications and Admin to track the total applications, 
 This API is designed with production-ready practices including caching, background jobs, and CI/CD.
 
 It allows users to:
@@ -27,10 +27,20 @@ It allows users to:
 * Track job applications  
 * Update job status over time  
 * View complete status history  
-* Analyze job statistics  
-* Improve performance using caching  
 
-This project focuses on **real-world backend architecture**, **clean API design**, and **scalable structure**.
+It allows admin to:
+
+* track their total Application
+* Manage jobs status (add,delet,update) 
+* Select or Reject the candidate
+
+Overall:
+
+* Analyze job statistics  
+* Improve performance using caching
+
+
+This project focuses on **real-world backend architecture**, **clean API design**, and **scalable structure** with **simple UI**.
 
 ---
 
@@ -38,6 +48,9 @@ This project focuses on **real-world backend architecture**, **clean API design*
 
 * **Python**
 * **Flask**
+* **HTML**
+* **Js**
+* **css**
 * **PostgreSQL**
 * **SQLite (for testing)**
 * **SQLAlchemy (ORM)**
@@ -58,7 +71,8 @@ This project focuses on **real-world backend architecture**, **clean API design*
 
 ### 🔑 Authentication
 
-* User Registration  
+* User Registration
+* admin Registration   
 * Login with JWT  
 * Access & Refresh Tokens  
 * Secure password hashing  
@@ -73,14 +87,13 @@ This project focuses on **real-world backend architecture**, **clean API design*
 * Get all jobs (with filters & pagination)  
 * Get single job details  
 * Update job details  
-* Soft delete jobs  
-* Duplicate job prevention  
+* delete jobs  
 
 ---
 
 ### 📊 Status Tracking
 
-* Track status changes (applied → interview → offer → rejected)  
+* Track status changes (applied → admin(verify)→ selected/rejected)  
 * Maintain complete history of status transitions  
 
 ---
@@ -88,7 +101,7 @@ This project focuses on **real-world backend architecture**, **clean API design*
 ### 📈 Dashboard
 
 * Total jobs count  
-* Applied / Interview / Offer / Rejected stats  
+* Applied / Interview / Rejected stats  
 * Response rate calculation  
 * Stale job detection (based on inactivity, not creation time)  
 
@@ -131,7 +144,21 @@ This project focuses on **real-world backend architecture**, **clean API design*
 
 ---
 
-### 💼 Jobs
+### 💼 Admin View
+
+| Method | Endpoint            | Description                         |
+| ------ | ------------------- | ----------------------------------- |
+| POST   | `/jobs`             | Create new job                      |
+| PUT    | `/jobs/<id>`        | Update job                          |
+| DELETE | `/jobs/<id>`        | Soft delete job                     |
+| GET    | `/jobs`             | Get all jobs (filters + pagination) |
+| GET    | `/jobs/<id>`        | Get single job                      |
+| GET    | `/applications`     | List all applications               |
+| GET    | `/applications/<id>`| List all applications               |
+
+---
+
+### 💼 User View
 
 | Method | Endpoint     | Description                         |
 | ------ | ------------ | ----------------------------------- |
@@ -145,11 +172,11 @@ This project focuses on **real-world backend architecture**, **clean API design*
 
 ### 📊 History
 
-| Method | Endpoint             | Description             |
-| ------ | -------------------- | ----------------------- |
-| GET    | `/jobs/<id>/history` | Job status history      |
-| GET    | `/dashboard`         | Job statistics          |
-| GET    | `/dashboard/stale`   | Stale job detection     |
+| Method | Endpoint             | Description                      | User          |
+| ------ | -------------------- | ----------------------- ---------| ------------
+| GET    | `/dashboard`         | personal application statistics  | Applicant     |
+| GET    | `/admin/dashboard`   | total jobs/selection statistics  | Admin         |
+
 
 ---
 
@@ -173,16 +200,6 @@ X-Cache: HIT / MISS
 ```
 ---
 
-## 🧠 Stale Job Logic
-
-A job is considered stale if:
-- Status = applied  
-- AND no activity in the last 7 days  
-
-Uses:
-StatusHistory.changed_at (latest activity), NOT created_at.
-
----
 
 ### 🧪 Testing & CI
 
@@ -215,47 +232,57 @@ A complete Postman collection is included covering:
 
 ```
 Job_Tracker/
-│
-├── app/
-│   ├── models/
-│   │   ├── user.py
-│   │   ├── job.py
-│   │   ├── status_history.py
-│   │
-│   ├── routes/
-│   │   ├── auth.py
-│   │   ├── jobs.py
-│   │   ├── dashboard.py
-│   │
-│   ├── schemas/
-│   │   ├── user_schema.py
-│   │   ├── job_schema.py
-│   │
-│   ├── utils/
-│   │   ├── errors.py
-│   │   ├── scheduler.py
-│   │
-│   ├── __init__.py
-│
-├── migrations/
-│
-├── postman/
-│   └── job-tracker-api.postman_collection.json
-│
-├── run.py
-├── config.py
+|
+├──BackEnd/
+|   │
+|   ├── app/
+|   │   ├── models/
+|   │   │   ├── user.py
+|   │   │   ├── job.py
+|   │   │   ├── application.py
+|   │   │
+|   │   ├── routes/
+|   |   |   ├──admin.py
+|   │   │   ├── auth.py
+|   |   |   ├── dashboard.py
+|   │   │   ├── jobs.py
+|   │   │   ├── dashboard.py
+|   │   │
+|   │   ├── schemas/
+|   |   |   ├──application_schema.py
+|   │   │   ├── user_schema.py
+|   │   │   ├── job_schema.py
+|   │   │
+|   │   ├── utils/
+|   |   |   ├──decorators.py
+|   │   │   ├── errors.py
+|   │   │   ├── scheduler.py
+|   │   │
+|   │   ├── __init__.py
+|   |   │
+|   ├── postman/
+|   │   └── job-tracker-api.postman_collection.json
+|   │
+|   ├── run.py
+|   ├── config.py
+|   ├── admin_cli.puy
+|   ├── Procfile
+├── FrountEnd/
+|   ├── js/
+|   |   ├── js files
+|   ├── html files
+|   ├── style.css
+|
 ├── requirements.txt
-├── Procfile
-└── README.md
+└── Readme.md
 ```
 
 ---
 
 ## 🚀 Deployment
 
-* Backend hosted on **Render**
-* PostgreSQL database hosted on **Railway**
-* Environment variables used for secure configuration
+* Backend hosted on **yet to add**
+* PostgreSQL database hosted on **yet to add**
 * Frontend hosted on **Yet to add**
 
 ---
