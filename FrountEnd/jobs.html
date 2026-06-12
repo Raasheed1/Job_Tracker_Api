@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browse Jobs - Job Portal</title>
+    <meta name="description" content="Browse and apply for available job postings.">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav>
+        <div class="container nav-inner">
+            <span class="brand">Job Portal</span>
+            <ul>
+                <li><a href="user-dashboard.html">Dashboard</a></li>
+                <li><a href="jobs.html" class="active">Jobs</a></li>
+                <li><a href="my-applications.html">My Applications</a></li>
+                <li><a href="#" id="logoutBtn">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="page-header">
+            <h1>Browse Jobs</h1>
+            <p>Find and apply for open positions.</p>
+        </div>
+
+        <div id="alert" class="alert alert-error" style="display:none;"></div>
+        <div id="successAlert" class="alert alert-success" style="display:none;"></div>
+
+        <!-- Search toolbar -->
+        <div class="toolbar">
+            <input type="text" id="searchTitle" placeholder="Job title..." style="flex:1; min-width:120px;">
+            <input type="text" id="searchCompany" placeholder="Company..." style="min-width:120px;">
+            <input type="text" id="searchLocation" placeholder="Location..." style="min-width:120px;">
+            <select id="searchType">
+                <option value="">All types</option>
+                <option value="full-time">Full-time</option>
+                <option value="part-time">Part-time</option>
+                <option value="contract">Contract</option>
+                <option value="internship">Internship</option>
+                <option value="remote">Remote</option>
+            </select>
+            <button class="btn" id="searchBtn">Search</button>
+        </div>
+
+        <div class="table-wrapper">
+            <table id="jobsTable">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Company</th>
+                        <th>Location</th>
+                        <th>Type</th>
+                        <th>Salary</th>
+                        <th>Posted</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="jobsBody">
+                    <tr><td colspan="7" class="empty-state">Loading...</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="pagination" id="pagination"></div>
+    </div>
+
+    <!-- Job Detail Modal -->
+    <div class="modal-overlay" id="detailModal">
+        <div class="modal">
+            <h3 id="modalTitle"></h3>
+            <p style="margin-bottom:8px;"><strong id="modalCompany"></strong> &mdash; <span id="modalLocation"></span></p>
+            <p style="margin-bottom:4px;font-size:12px;color:#555;">Type: <span id="modalType"></span> &nbsp;|&nbsp; Salary: <span id="modalSalary"></span></p>
+            <hr style="margin:12px 0;border:none;border-top:1px solid #ddd;">
+            <p id="modalDescription" style="white-space:pre-wrap;font-size:13px;"></p>
+            <div class="modal-actions">
+                <button class="btn" id="modalClose">Close</button>
+                <button class="btn btn-primary" id="modalApply">Apply</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/jobs.js"></script>
+</body>
+</html>

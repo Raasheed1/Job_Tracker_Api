@@ -1,198 +1,164 @@
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from app.models.job import Job
-from app.models.status_history import StatusHistory
+from app.models.application import Application
 from app import db
-from datetime import datetime,timezone
-from app.schemas.job_schema import JobSchema
+from datetime import datetime, timezone
 
 jobs_bp = Blueprint('jobs', __name__)
-
-@jobs_bp.route('/jobs',methods=['POST'])
-@jwt_required()
-def create_job():
-    user_id = int(get_jwt_identity())
-    data=request.get_json()
-    if not data:
-        return jsonify({"error": "No data", "code": 400}), 400
-
-    schema = JobSchema()
-    errors = schema.validate(data)
-
-    if errors:
-        return jsonify({"error": errors, "code": 422}), 422
-    
-    existing_job = Job.query.filter_by(
-        user_id=user_id,
-        company=data['company'],
-        role=data['role'],
-        deleted_at=None
-        ).first()
-
-    if existing_job:
-        return jsonify({"error": "Job already exists", "code": 400}), 400
-    
-    job=Job(
-        user_id=user_id,
-        company=data['company'],
-        role=data['role'],
-        notes=data.get('notes'),
-        job_url=data.get('job_url'),
-        applied_date=data.get('applied_date')
-    )
-    db.session.add(job)
-    db.session.commit()
-    return jsonify({
-        "message": "Job created",
-        "data": {
-            "id": job.id,
-            "company": job.company,
-            "role": job.role,
-            "status": job.status
-        }
-    }), 201
 
 
 @jobs_bp.route('/jobs', methods=['GET'])
 @jwt_required()
 def get_jobs():
-    user_id= int(get_jwt_identity())
-    query=Job.query.filter_by(user_id=user_id,deleted_at=None)
+    """List all active job postings with optional search filters."""
+    query = Job.query.filter_by(is_active=True)
 
-    status=request.args.get('status')
-    company=request.args.get('company')
+    title = request.args.get('title')
+    company = request.args.get('company')
+    location = request.args.get('location')
+    job_type = request.args.get('job_type')
 
     page = request.args.get('page', 1, type=int)
-    limit = request.args.get('limit', 5, type=int)
+    limit = request.args.get('limit', 10, type=int)
 
-    if status:
-        query=query.filter(Job.status==status)
+    if title:
+        query = query.filter(Job.title.ilike(f"%{title}%"))
     if company:
-        query=query.filter(Job.company.ilike(f"%{company}%"))
-    
-    jobs = query.paginate(page=page, per_page=limit, error_out=False)
-    
-    return jsonify({"message": "Jobs fetched",
-            "data": {
-                "total": jobs.total,
-                "page": jobs.page,
-                "pages": jobs.pages,
-                "jobs": [
-                    {
-                        "id": j.id,
-                        "company": j.company,
-                        "role": j.role,
-                        "status": j.status
-                    } for j in jobs.items
-                ]
-            }
-    })
+        query = query.filter(Job.company.ilike(f"%{company}%"))
+    if location:
+        query = query.filter(Job.location.ilike(f"%{location}%"))
+    if job_type:
+        query = query.filter(Job.job_type == job_type)
 
+    jobs = query.order_by(Job.created_at.desc()).paginate(page=page, per_page=limit, error_out=False)
 
-@jobs_bp.route('/jobs/<int:job_id>',methods=['GET'])
-@jwt_required()
-def get_job(job_id):
-    user_id= int(get_jwt_identity())
-    job=Job.query.filter_by(user_id=user_id,id=job_id,deleted_at=None).first()
-
-    if not job:
-        return jsonify({"error": "Job not found", "code": 404}), 404
-    
-    return jsonify({"message": "Job fetched",
+    return jsonify({
+        "message": "Jobs fetched",
         "data": {
-            "id": job.id,
-            "company": job.company,
-            "role": job.role,
-            "status": job.status,
-            "created_at": job.created_at.isoformat() if job.created_at else None,
-            "notes": job.notes,
-            "job_url": job.job_url,
-            "applied_date": job.applied_date
+            "total": jobs.total,
+            "page": jobs.page,
+            "pages": jobs.pages,
+            "jobs": [
+                {
+                    "id": j.id,
+                    "title": j.title,
+                    "company": j.company,
+                    "location": j.location,
+                    "salary": j.salary,
+                    "job_type": j.job_type,
+                    "created_at": j.created_at.isoformat() if j.created_at else None
+                } for j in jobs.items
+            ]
         }
     })
 
 
-@jobs_bp.route('/jobs/<int:job_id>',methods=['PUT'])
+@jobs_bp.route('/jobs/<int:job_id>', methods=['GET'])
 @jwt_required()
-def update_job(job_id):
-    user_id= int(get_jwt_identity())
-    data=request.get_json()
-    if not data:
-        return jsonify({"error": "No data", "code": 400}), 400
+def get_job(job_id):
+    """Get a single active job posting by ID."""
+    job = Job.query.filter_by(id=job_id, is_active=True).first()
 
-    schema = JobSchema()
-    errors = schema.validate(data, partial=True)
-
-    if errors:
-        return jsonify({"error": errors, "code": 422}), 422
-    job=Job.query.filter_by(id=job_id,user_id=user_id,deleted_at=None).first()
     if not job:
         return jsonify({"error": "Job not found", "code": 404}), 404
-    
-    job.company=data.get('company',job.company)
-    job.role=data.get('role',job.role)
-    job.notes = data.get('notes', job.notes)
-    job.job_url = data.get('job_url', job.job_url)
-    job.applied_date = data.get('applied_date', job.applied_date)
 
-    if 'status' in data and data['status'] != job.status:
-        history = StatusHistory(
-            job_id=job.id,
-            from_status=job.status,
-            to_status=data['status'],
-            changed_at=datetime.now(timezone.utc)
-        )
-        db.session.add(history)
-        job.status = data['status']
-
-    db.session.commit()
-    return jsonify({"message": "Job updated",
+    return jsonify({
+        "message": "Job fetched",
         "data": {
             "id": job.id,
+            "title": job.title,
             "company": job.company,
-            "role": job.role,
-            "status": job.status,
-            "notes": job.notes,
-            "job_url": job.job_url,
-            "applied_date": job.applied_date,
+            "description": job.description,
+            "location": job.location,
+            "salary": job.salary,
+            "job_type": job.job_type,
             "created_at": job.created_at.isoformat() if job.created_at else None
         }
     })
 
-@jobs_bp.route('/jobs/<int:job_id>',methods=['DELETE'])
+
+@jobs_bp.route('/jobs/<int:job_id>/apply', methods=['POST'])
 @jwt_required()
-def delete_job(job_id):
-    user_id= int(get_jwt_identity())
-    
-    job=Job.query.filter_by(id=job_id,user_id=user_id,deleted_at=None).first()
-
-    if not job:
-        return jsonify({"error": "Job not found", "code": 404}), 404
-    
-    job.deleted_at=datetime.now(timezone.utc)
-    db.session.commit()
-    return jsonify({"message": "Job deleted"})
-
-
-@jobs_bp.route('/jobs/<int:job_id>/history', methods=['GET'])
-@jwt_required()
-def get_history(job_id):
+def apply_job(job_id):
+    """Apply to a job. Users can only apply once per job."""
     user_id = int(get_jwt_identity())
 
-    job = Job.query.filter_by(id=job_id,user_id=user_id,deleted_at=None).first()
-
+    job = Job.query.filter_by(id=job_id, is_active=True).first()
     if not job:
-        return jsonify({"error": "Job not found", "code": 404}), 404
+        return jsonify({"error": "Job not found or not active", "code": 404}), 404
 
-    history = StatusHistory.query.filter_by(job_id=job_id).all()
+    existing = Application.query.filter_by(job_id=job_id, user_id=user_id).first()
+    if existing:
+        return jsonify({"error": "Already applied to this job", "code": 400}), 400
 
-    return jsonify({"message": "History fetched",
-        "data": [
-            {
-                "from": h.from_status,
-                "to": h.to_status,
-                "time": h.changed_at.isoformat() if h.changed_at else None
-            } for h in history
-        ]
+    application = Application(
+        job_id=job_id,
+        user_id=user_id,
+        status='pending'
+    )
+    db.session.add(application)
+    db.session.commit()
+
+    return jsonify({
+        "message": "Application submitted",
+        "data": {
+            "id": application.id,
+            "job_id": application.job_id,
+            "status": application.status,
+            "applied_at": application.applied_at.isoformat() if application.applied_at else None
+        }
+    }), 201
+
+
+@jobs_bp.route('/my-applications', methods=['GET'])
+@jwt_required()
+def my_applications():
+    """List all applications submitted by the current user."""
+    user_id = int(get_jwt_identity())
+
+    page = request.args.get('page', 1, type=int)
+    limit = request.args.get('limit', 10, type=int)
+
+    apps = Application.query.filter_by(user_id=user_id)\
+        .order_by(Application.applied_at.desc())\
+        .paginate(page=page, per_page=limit, error_out=False)
+
+    return jsonify({
+        "message": "Applications fetched",
+        "data": {
+            "total": apps.total,
+            "page": apps.page,
+            "pages": apps.pages,
+            "applications": [
+                {
+                    "id": a.id,
+                    "job_id": a.job_id,
+                    "job_title": a.job.title,
+                    "company": a.job.company,
+                    "status": a.status,
+                    "applied_at": a.applied_at.isoformat() if a.applied_at else None,
+                    "updated_at": a.updated_at.isoformat() if a.updated_at else None
+                } for a in apps.items
+            ]
+        }
     })
 
+
+@jobs_bp.route('/applications/<int:application_id>', methods=['DELETE'])
+@jwt_required()
+def withdraw_application(application_id):
+    """Withdraw (delete) a pending application. Only the applicant can do this."""
+    user_id = int(get_jwt_identity())
+
+    application = Application.query.filter_by(id=application_id, user_id=user_id).first()
+    if not application:
+        return jsonify({"error": "Application not found", "code": 404}), 404
+
+    if application.status != 'pending':
+        return jsonify({"error": "Only pending applications can be withdrawn", "code": 400}), 400
+
+    db.session.delete(application)
+    db.session.commit()
+
+    return jsonify({"message": "Application withdrawn"})

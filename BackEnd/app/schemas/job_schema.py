@@ -1,9 +1,14 @@
 from marshmallow import Schema, fields, validate
 
+
 class JobSchema(Schema):
+    title = fields.String(required=True)
     company = fields.String(required=True)
-    role = fields.String(required=True)
-    status = fields.String(validate=validate.OneOf(["applied", "interview", "offer", "rejected"]))
-    notes = fields.String(load_default=None)
-    job_url = fields.Url(load_default=None)
-    applied_date = fields.Date(load_default=None)
+    description = fields.String(required=True)
+    location = fields.String(load_default=None)
+    salary = fields.String(load_default=None)
+    job_type = fields.String(
+        load_default=None,
+        validate=validate.OneOf(['full-time', 'part-time', 'contract', 'internship', 'remote'])
+    )
+    is_active = fields.Boolean(load_default=True)

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Jobs - Admin - Job Portal</title>
+    <meta name="description" content="Admin job management: create, edit, delete job postings and view applicants.">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav>
+        <div class="container nav-inner">
+            <span class="brand">Job Portal (Admin)</span>
+            <ul>
+                <li><a href="admin-dashboard.html">Dashboard</a></li>
+                <li><a href="admin-jobs.html" class="active">Jobs</a></li>
+                <li><a href="admin-applications.html">Applications</a></li>
+                <li><a href="#" id="logoutBtn">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="page-header">
+            <h1>Job Management</h1>
+            <p>Create, edit, and delete job postings.</p>
+        </div>
+
+        <div id="alert" class="alert alert-error" style="display:none;"></div>
+        <div id="successAlert" class="alert alert-success" style="display:none;"></div>
+
+        <div style="margin-bottom:16px;">
+            <button class="btn btn-primary" id="createJobBtn">+ Create Job</button>
+        </div>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Title</th>
+                        <th>Company</th>
+                        <th>Location</th>
+                        <th>Type</th>
+                        <th>Active</th>
+                        <th>Applications</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="jobsBody">
+                    <tr><td colspan="8" class="empty-state">Loading...</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="pagination" id="pagination"></div>
+    </div>
+
+    <!-- Create/Edit Job Modal -->
+    <div class="modal-overlay" id="jobModal">
+        <div class="modal">
+            <h3 id="modalTitle">Create Job</h3>
+            <form id="jobForm">
+                <input type="hidden" id="jobId">
+                <div class="form-group">
+                    <label for="fTitle">Title</label>
+                    <input type="text" id="fTitle" required>
+                </div>
+                <div class="form-group">
+                    <label for="fCompany">Company</label>
+                    <input type="text" id="fCompany" required>
+                </div>
+                <div class="form-group">
+                    <label for="fDescription">Description</label>
+                    <textarea id="fDescription" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="fLocation">Location</label>
+                    <input type="text" id="fLocation">
+                </div>
+                <div class="form-group">
+                    <label for="fSalary">Salary</label>
+                    <input type="text" id="fSalary" placeholder="e.g. $60,000 - $80,000">
+                </div>
+                <div class="form-group">
+                    <label for="fType">Job Type</label>
+                    <select id="fType">
+                        <option value="">Select type</option>
+                        <option value="full-time">Full-time</option>
+                        <option value="part-time">Part-time</option>
+                        <option value="contract">Contract</option>
+                        <option value="internship">Internship</option>
+                        <option value="remote">Remote</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="fActive" checked>
+                        Active (visible to users)
+                    </label>
+                </div>
+                <div id="formAlert" class="alert alert-error" style="display:none;"></div>
+                <div class="modal-actions">
+                    <button type="button" class="btn" id="modalCancel">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="modalSave">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Applicants Modal -->
+    <div class="modal-overlay" id="applicantsModal">
+        <div class="modal" style="max-width:600px;">
+            <h3 id="applicantsTitle">Applicants</h3>
+            <div class="table-wrapper" style="margin-bottom:0;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Email</th>
+                            <th>Status</th>
+                            <th>Applied On</th>
+                        </tr>
+                    </thead>
+                    <tbody id="applicantsBody">
+                        <tr><td colspan="3" class="empty-state">Loading...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-actions">
+                <button class="btn" id="applicantsClose">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/admin-jobs.js"></script>
+</body>
+</html>
