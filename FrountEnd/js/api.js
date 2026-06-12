@@ -3,7 +3,10 @@
  * Provides: API base URL, apiFetch helper, auth guards, and common utilities
  */
 
-const API = 'http://localhost:5000';
+const API =
+    location.hostname === 'localhost'
+        ? 'http://localhost:5000'
+        : 'https://job-tracker-api-e1tv.onrender.com';
 
 /**
  * Authenticated fetch wrapper – injects Authorization header automatically.
