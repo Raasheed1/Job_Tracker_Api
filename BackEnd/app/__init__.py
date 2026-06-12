@@ -35,7 +35,15 @@ def create_app():
         app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///:memory:"
 
     # Allow requests from the frontend (file://, localhost, etc.)
-    CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
+    CORS(
+    app,
+    supports_credentials=True,
+    origins=[
+        "https://square-fog-2b6f.raasheedmuhammad418.workers.dev",
+        "http://localhost:5500",
+        "http://127.0.0.1:5500"
+    ]
+)
 
     db.init_app(app)
     migrate.init_app(app, db)
