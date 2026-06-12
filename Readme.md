@@ -172,10 +172,10 @@ This project focuses on **real-world backend architecture**, **clean API design*
 
 ### 📊 History
 
-| Method | Endpoint             | Description                      | User          |
-| ------ | -------------------- | ----------------------- ---------| ------------
-| GET    | `/dashboard`         | personal application statistics  | Applicant     |
-| GET    | `/admin/dashboard`   | total jobs/selection statistics  | Admin         |
+| Method | Endpoint             | Description                       | User          |
+| ------ | -------------------- | --------------------------------- | ------------  |
+| GET    | `/dashboard`         | personal application statistics   | Applicant     |
+| GET    | `/admin/dashboard`   | total jobs/selection statistics   | Admin         |
 
 
 ---
@@ -267,13 +267,14 @@ Job_Tracker/
 |   ├── config.py
 |   ├── admin_cli.puy
 |   ├── Procfile
+|   ├── requirements.txt
 ├── FrountEnd/
 |   ├── js/
 |   |   ├── js files
 |   ├── html files
 |   ├── style.css
 |
-├── requirements.txt
+|
 └── Readme.md
 ```
 
