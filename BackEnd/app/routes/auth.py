@@ -113,6 +113,7 @@ def login():
     })
 
 
+
 @auth_bp.route('/logout', methods=['POST'])
 @jwt_required()
 def logout():

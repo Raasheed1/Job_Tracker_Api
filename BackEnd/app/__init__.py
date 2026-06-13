@@ -39,7 +39,7 @@ def create_app():
     app,
     supports_credentials=True,
     origins=[
-        "https://lucky-puppy-13e192.netlify.app/",
+        "https://lucky-puppy-13e192.netlify.app",
         "http://localhost:5500",
         "http://127.0.0.1:5500"
     ]
@@ -48,6 +48,8 @@ def create_app():
     db.init_app(app)
     migrate.init_app(app, db)
     jwt.init_app(app)
+
+    
 
     # Register blueprints
     from app.routes.auth import auth_bp
