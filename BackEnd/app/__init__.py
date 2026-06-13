@@ -39,7 +39,7 @@ def create_app():
     app,
     supports_credentials=True,
     origins=[
-        "https://square-fog-2b6f.raasheedmuhammad418.workers.dev",
+        "https://lucky-puppy-13e192.netlify.app/",
         "http://localhost:5500",
         "http://127.0.0.1:5500"
     ]
