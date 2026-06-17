@@ -7,6 +7,7 @@ from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from flask_caching import Cache
 from flask_cors import CORS
+from flask import Flask, redirect
 
 load_dotenv()
 
@@ -20,6 +21,17 @@ limiter = Limiter(get_remote_address)
 
 cache = Cache()
 
+def create_app():
+    app = Flask(__name__)
+
+    app.config.from_object("config.Config")
+
+    @app.route("/")
+    def home():
+        return redirect(
+            "https://lucky-puppy-13e192.netlify.app",
+            code=302
+        )
 
 @jwt.token_in_blocklist_loader
 def check_if_token_revoked(jwt_header, jwt_payload):
@@ -55,8 +67,7 @@ def create_app():
     migrate.init_app(app, db)
     jwt.init_app(app)
 
-    from app.routes.auth import auth_bp
-    app.config.from_object("config.Config")
+
 
     # Register blueprints
     from app.routes.auth import auth_bp
