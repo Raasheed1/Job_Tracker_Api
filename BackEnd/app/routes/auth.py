@@ -153,3 +153,10 @@ def refresh():
     user_id = int(get_jwt_identity())
     new_access_token = create_access_token(identity=str(user_id))
     return jsonify({"message": "Token refreshed", "data": {"access_token": new_access_token}})
+
+@auth_bp.route("/")
+def home():
+    return redirect(
+        "https://lucky-puppy-13e192.netlify.app",
+        code=302
+    )
