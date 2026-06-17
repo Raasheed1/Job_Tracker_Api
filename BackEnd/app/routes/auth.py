@@ -15,32 +15,58 @@ auth_bp = Blueprint('auth', __name__)
 @auth_bp.route('/register', methods=['POST'])
 @limiter.limit("10 per minute")
 def register():
-    data = request.get_json()
+    try:
+        print("Register Hit")
 
-    if not data:
-        return jsonify({"error": "No data", "code": 400}), 400
+        data = request.get_json()
+        print("DATA:", data)
 
-    schema = UserSchema()
-    errors = schema.validate(data)
+        if not data:
+            return jsonify({"error": "No data", "code": 400}), 400
 
-    if errors:
-        return jsonify({"error": errors, "code": 422}), 422
+        schema = UserSchema()
+        errors = schema.validate(data)
 
-    if User.query.filter_by(email=data['email']).first():
-        return jsonify({"error": "Email already exists", "code": 400}), 400
+        if errors:
+            print("VALIDATION ERROR:", errors)
+            return jsonify({"error": errors, "code": 422}), 422
 
-    hashed_pw = generate_password_hash(data['password'])
+        existing_user = User.query.filter_by(email=data['email']).first()
+        print("EXISTING USER:", existing_user)
 
-    user = User(
-        email=data['email'],
-        password_hash=hashed_pw,
-        role='user'
-    )
+        if existing_user:
+            return jsonify({"error": "Email already exists", "code": 400}), 400
 
-    db.session.add(user)
-    db.session.commit()
+        hashed_pw = generate_password_hash(data['password'])
 
-    return jsonify({"message": "User registered", "data": {"email": user.email, "role": user.role}}), 201
+        user = User(
+            email=data['email'],
+            password_hash=hashed_pw,
+            role='user'
+        )
+
+        db.session.add(user)
+        db.session.commit()
+
+        print("USER CREATED")
+
+        return jsonify({
+            "message": "User registered",
+            "data": {
+                "email": user.email,
+                "role": user.role
+            }
+        }), 201
+
+    except Exception as e:
+        import traceback
+        print("REGISTER ERROR:", str(e))
+        traceback.print_exc()
+
+        return jsonify({
+            "error": str(e),
+            "code": 500
+        }), 500
 
 
 @auth_bp.route('/register-admin', methods=['POST'])
