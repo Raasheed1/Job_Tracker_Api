@@ -34,16 +34,22 @@ def create_app():
     if not app.config.get("SQLALCHEMY_DATABASE_URI"):
         app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///:memory:"
 
-    # Allow requests from the frontend (file://, localhost, etc.)
+    # Allow requests from the frontend — local dev and production
     CORS(
-    app,
-    supports_credentials=True,
-    origins=[
-        "https://lucky-puppy-13e192.netlify.app",
-        "http://localhost:5500",
-        "http://127.0.0.1:5500"
-    ]
-)
+        app,
+        supports_credentials=True,
+        origins=[
+            # ── Local development ──────────────────────────────────
+            "http://localhost:5500",        # VS Code Live Server (localhost)
+            "http://127.0.0.1:5500",        # VS Code Live Server (127.0.0.1)
+            "http://localhost:3000",        # React / Vite dev server
+            "http://127.0.0.1:3000",
+            "http://localhost:5000",
+            "http://127.0.0.1:5000",
+            # ── Production ─────────────────────────────────────────
+            "https://lucky-puppy-13e192.netlify.app",  # Netlify frontend
+        ]
+    )
 
     db.init_app(app)
     migrate.init_app(app, db)

@@ -4,10 +4,9 @@
  */
 
 const API =
-    location.hostname === 'localhost'
-        ? 'http://localhost:5000'
-        : 'https://job-tracker-api-e1tv.onrender.com';
-
+    (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
+        ? 'http://127.0.0.1:5000'          // local Flask dev server
+        : 'https://job-tracker-api-e1tv.onrender.com'; // production (Render)
 /**
  * Authenticated fetch wrapper – injects Authorization header automatically.
  */

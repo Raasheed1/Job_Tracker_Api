@@ -90,7 +90,6 @@ def login():
 
     schema = UserSchema()
     errors = schema.validate(data)
-
     if errors:
         return jsonify({"error": errors, "code": 422}), 422
 
@@ -98,7 +97,7 @@ def login():
 
     if not user or not check_password_hash(user.password_hash, data['password']):
         return jsonify({"error": "Invalid credentials", "code": 401}), 401
-
+    
     access_token = create_access_token(identity=str(user.id))
     refresh_token = create_refresh_token(identity=str(user.id))
 
