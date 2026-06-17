@@ -154,9 +154,4 @@ def refresh():
     new_access_token = create_access_token(identity=str(user_id))
     return jsonify({"message": "Token refreshed", "data": {"access_token": new_access_token}})
 
-@auth_bp.route("/https://job-tracker-api-e1tv.onrender.com/")
-def home():
-    return jsonify({"Click hear":"https://lucky-puppy-13e192.netlify.app"}
-
-    )
 

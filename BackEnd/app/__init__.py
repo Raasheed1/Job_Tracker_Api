@@ -21,17 +21,6 @@ limiter = Limiter(get_remote_address)
 
 cache = Cache()
 
-def create_app():
-    app = Flask(__name__)
-
-    app.config.from_object("config.Config")
-
-    @app.route("/")
-    def home():
-        return redirect(
-            "https://lucky-puppy-13e192.netlify.app",
-            code=302
-        )
 
 @jwt.token_in_blocklist_loader
 def check_if_token_revoked(jwt_header, jwt_payload):
@@ -63,11 +52,15 @@ def create_app():
         ]
     )
 
+    @app.route("/")
+    def home():
+        return redirect(
+            "https://lucky-puppy-13e192.netlify.app",
+            code=301
+    )
     db.init_app(app)
     migrate.init_app(app, db)
     jwt.init_app(app)
-
-
 
     # Register blueprints
     from app.routes.auth import auth_bp
