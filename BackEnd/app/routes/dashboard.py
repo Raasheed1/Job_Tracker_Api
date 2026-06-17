@@ -5,6 +5,7 @@ from app.models.application import Application
 from app.models.user import User
 from app.utils.decorators import admin_required
 from app import db, cache
+from flask import Flask, redirect
 
 dashboard_bp = Blueprint('dashboard', __name__)
 

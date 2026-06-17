@@ -55,7 +55,8 @@ def create_app():
     migrate.init_app(app, db)
     jwt.init_app(app)
 
-    
+    from app.routes.auth import auth_bp
+    app.config.from_object("config.Config")
 
     # Register blueprints
     from app.routes.auth import auth_bp

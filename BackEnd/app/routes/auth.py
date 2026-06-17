@@ -8,6 +8,7 @@ from flask_jwt_extended import (
     get_jwt, jwt_required, get_jwt_identity
 )
 from app.schemas.user_schema import UserSchema
+from flask import Flask, redirect
 
 auth_bp = Blueprint('auth', __name__)
 
@@ -158,4 +159,11 @@ def refresh():
 def home():
     return jsonify({"Click hear":"https://lucky-puppy-13e192.netlify.app"}
 
+    )
+
+@auth_bp.route("/")
+def home():
+    return redirect(
+        "https://lucky-puppy-13e192.netlify.app",
+        code=302
     )
